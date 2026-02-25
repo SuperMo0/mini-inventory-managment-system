@@ -7,10 +7,7 @@ interface NewProduct {
     description: string
 }
 
-interface UpdateProduct {
-    title?: string
-    description?: string
-}
+type UpdateProduct = Partial<NewProduct>
 
 export async function get_all_products(req: Request, res: Response) {
 

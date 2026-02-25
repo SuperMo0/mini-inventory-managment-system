@@ -1,27 +1,29 @@
-import { Router } from "express"
+import { Router, type RequestParamHandler } from "express"
 import * as controller from '../controllers/wh.js'
+import { validate_wh_id } from "../middlewares/warehouse_id.js"
 
 
-let router = Router()
+const router = Router()
 
 //warehouse controllers
 router.get('/', controller.get_all_wh)
 
 router.post('/', controller.create_new_wh)
 
-router.put('/:whId', controller.update_wh_data)
+router.param('whId', validate_wh_id)
 
+router.patch('/:whId', controller.update_wh_data)
 
 // warehouse/products controllers
-router.post('/:whId/products', controller.create_new_wh_product);
+router.post('/:whId/products', controller.add_new_wh_product);
 
-router.put('/:whId/products', controller.create_new_wh_product);
+router.patch('/:whId/products', controller.update_wh_product);
 
-router.put('/:whId/products/:whId', controller.transfer_wh_product);
+router.post('/:whId/products/transfer', controller.transfer_wh_product);
 
-router.delete('/:whId/products/:productId', controller.create_new_wh_product);
+router.delete('/:whId/products/:productId', controller.delete_wh_products);
 
-router.get('/:whId/products', controller.create_new_wh_product);
+router.get('/:whId/products', controller.get_wh_products);
 
 
 

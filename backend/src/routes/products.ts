@@ -10,7 +10,7 @@ router.get('/', controller.get_all_products)
 
 router.post('/', controller.create_new_product)
 
-router.put('/:productId', controller.update_product_data)
+router.patch('/:productId', controller.update_product_data)
 
 
 
