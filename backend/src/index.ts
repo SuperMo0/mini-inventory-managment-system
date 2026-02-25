@@ -19,5 +19,5 @@ let PORT = process.env.PORT || 3000
 
 app.use(error_handler)
 app.listen(PORT, () => {
-  console.log(`server listening on port ${PORT}`);
+  console.log(`server is listening on port ${PORT}`);
 })

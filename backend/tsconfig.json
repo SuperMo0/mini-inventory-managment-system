@@ -4,7 +4,6 @@
     "./node_modules/@tsconfig/node-lts/tsconfig.json"
   ],
   "compilerOptions": {
-    // "rootDir": "./src",
     "outDir": "./dist",
     "module": "esnext",
     "moduleResolution": "bundler",
@@ -15,7 +14,6 @@
   },
   "include": [
     "src/**/*",
-    "./generated"
   ],
   "exclude": [
     "generated"
