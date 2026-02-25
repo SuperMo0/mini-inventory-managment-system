@@ -1,12 +1,22 @@
 import type { Request, Response } from "express";
+import { prisma } from "../lib/prisma";
 
-// warehouse operations
-export function get_all_wh(req: Request, res: Response) {
-    res.json({
-        product: "product1, product2"
-    })
+interface WareHouse {
+    id: string,
+    location: string,
+    description: string,
+    created_at: Date
 }
+export async function get_all_wh(req: Request, res: Response) {
 
+    let warehouses: WareHouse[] = await prisma.$queryRaw`
+
+    select * from warehouses
+    left join (select warehouse_id,count(*) as total_unique,sum(quantity) as total) as t
+    on t.warehouse_id = warehouses.id
+    `
+    console.log(warehouses);
+}
 export function create_new_wh(req: Request, res: Response) {
     res.status(201).send("Done");
 }
@@ -14,6 +24,21 @@ export function create_new_wh(req: Request, res: Response) {
 export function update_wh_data(req: Request, res: Response) {
     res.status(201).send("Updated successfuly");
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 // warehouse/products routes
 export function create_new_wh_product(req: Request, res: Response) {
