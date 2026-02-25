@@ -23,6 +23,7 @@ model products {
 
 model warehouses {
   id                String              @id @default(dbgenerated("gen_random_uuid()"))
+  title             String              @unique
   location          String
   description       String              @db.VarChar(500)
   warehouseProducts warehouse_product[]
