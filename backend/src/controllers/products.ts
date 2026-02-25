@@ -29,17 +29,17 @@ export async function get_all_products(req: Request, res: Response) {
      * M is the number of warehouses that a product belong to
      * we can improve it by using a raw query instead 
      */
-    products.map(product => {
+    let updatedProducts = products.map(product => {
         let total = product.warehouseProducts.reduce((sum, item) => sum + item.quantity, 0);
         const { warehouseProducts, ...productResult } = product
         return {
-            total,
-            ...productResult
+            ...productResult,
+            total
         }
     })
 
     res.json({
-        products
+        products: updatedProducts
     })
 }
 

@@ -11,8 +11,8 @@ router.post('/', controller.create_new_wh)
 
 router.put('/:whId', controller.update_wh_data)
 
-// warehouse/products controllers
 
+// warehouse/products controllers
 router.post('/:whId/products', controller.create_new_wh_product);
 
 router.put('/:whId/products', controller.create_new_wh_product);

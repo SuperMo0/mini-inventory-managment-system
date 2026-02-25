@@ -29,7 +29,9 @@ export async function get_all_wh(req: Request, res: Response) {
     ) as t 
     on t.warehouse_id = warehouses.id   
     `
-    console.log(warehouses);
+    res.json({
+        warehouses
+    })
 }
 
 export async function create_new_wh(req: Request<{}, any, NewWareHouse>, res: Response) {
@@ -55,7 +57,7 @@ export async function create_new_wh(req: Request<{}, any, NewWareHouse>, res: Re
 
 export async function update_wh_data(req: Request<{ whId: string }, any, UpdateWareHouse>, res: Response) {
 
-    const { location, description } = req.body
+    const { location, description, title } = req.body
 
     const whId = req.params.whId
 
@@ -67,30 +69,17 @@ export async function update_wh_data(req: Request<{ whId: string }, any, UpdateW
         data: {
             location,
             description,
+            title
         },
         where: {
             id: whId
         }
     })
     if (!updatedWareHouse) { return res.status(StatusCodes.BAD_REQUEST).end() }
-
     return res.json({
         wareHouse: updatedWareHouse
     })
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
