@@ -1,12 +1,15 @@
 import type { Request, Response } from "express";
 import { prisma } from "../lib/prisma";
 
-interface WareHouse {
+type WareHouse = {
     id: string,
     location: string,
     description: string,
     created_at: Date
 }
+
+type NewWareHouse = Omit<WareHouse, 'id' | 'created_at'>;
+
 export async function get_all_wh(req: Request, res: Response) {
 
     let warehouses: WareHouse[] = await prisma.$queryRaw`
