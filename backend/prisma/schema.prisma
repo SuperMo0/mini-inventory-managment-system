@@ -14,13 +14,26 @@ datasource db {
 }
 
 model products {
-  id          String @id @default(dbgenerated("gen_random_uuid()"))
-  title       String
-  description String @db.VarChar(500)
+  id                String              @id @default(dbgenerated("gen_random_uuid()"))
+  title             String
+  description       String              @db.VarChar(500)
+  created_at        DateTime            @default(dbgenerated("CURRENT_DATE"))
+  warehouseProducts warehouse_product[]
 }
 
 model warehouses {
-  id          String @id @default(dbgenerated("gen_random_uuid()"))
-  location    String
-  description String @db.VarChar(500)
+  id                String              @id @default(dbgenerated("gen_random_uuid()"))
+  location          String
+  description       String              @db.VarChar(500)
+  warehouseProducts warehouse_product[]
+}
+
+model warehouse_product {
+  warehouse    warehouses @relation(fields: [warehouse_id], references: [id])
+  warehouse_id String
+  product      products   @relation(fields: [product_id], references: [id])
+  product_id   String
+  quantity     Int
+
+  @@id([warehouse_id, product_id])
 }
