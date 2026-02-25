@@ -1,8 +1,17 @@
 import type { Request, Response, NextFunction } from "express";
+import { Prisma } from "../../generated/prisma/client";
+import { StatusCodes } from "http-status-codes";
 
 export async function error_handler(err: Error, req: Request, res: Response, next: NextFunction) {
-    res.status(500);
+
+
     let stack = err.stack;
+
     let message = process.env.NODE_ENV == "development" ? stack : null;
-    res.end(message);
+
+    if (err instanceof Prisma.PrismaClientValidationError) {
+        return res.status(StatusCodes.BAD_REQUEST).json({ message: "Invalid request data" });
+    }
+
+    res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ message: stack });
 }
