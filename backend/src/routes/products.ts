@@ -1,8 +1,10 @@
 import { Router } from "express"
 import * as controller from '../controllers/products.js'
+import { validate_param_id } from "../middlewares/warehouse_id.js"
 
 
 let router = Router()
+router.param('productId', validate_param_id('productId'))
 
 let products = [{ name: "window", quantity: 22 }]
 

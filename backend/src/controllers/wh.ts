@@ -19,6 +19,7 @@ type UpdateWareHouse = Partial<NewWareHouse>
 
 export async function get_all_wh(req: Request, res: Response) {
 
+    // faster instead of O(N*M)
     let warehouses: WareHouseExtra[] = await prisma.$queryRaw`
     select
         id,location, description, title, coalesce(t.total_items,0)::int as total_items, coalesce(t.total_unique,0)::int as total_unique
@@ -80,6 +81,13 @@ export async function update_wh_data(req: Request<{ whId: string }, any, UpdateW
     })
 }
 
+
+
+
+
+
+
+
 type NewWhProduct = {
     productId: string,
     quantity: string | number
@@ -93,9 +101,7 @@ type TransferWhProduct = NewWhProduct & {
 
 type DeleteWhProduct = Pick<NewWhProduct, 'productId'>
 
-
 // warehouse/products routes
-// to be tested
 export async function add_new_wh_product(req: Request<{ whId: string }, any, NewWhProduct>, res: Response) {
 
     const { whId } = req.params

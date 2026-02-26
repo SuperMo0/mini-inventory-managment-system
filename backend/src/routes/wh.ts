@@ -4,6 +4,7 @@ import { validate_param_id } from "../middlewares/warehouse_id.js"
 
 
 const router = Router()
+
 router.param('whId', validate_param_id('whId'))
 
 //warehouse controllers
@@ -22,7 +23,6 @@ router.post('/:whId/products/transfer', controller.transfer_wh_product);
 
 router.patch('/:whId/products', controller.update_wh_product);
 
-// to do: send productId via body for consistecny
 router.delete('/:whId/products', controller.delete_wh_products);
 
 

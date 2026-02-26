@@ -8,12 +8,11 @@ let app = express();
 
 
 
-app.use(express.json({}))
+app.use(express.json())
 
 app.use('/api/products', productsRouter)
 
 app.use('/api/wh', whRouter)
-
 
 let PORT = process.env.PORT || 3000
 
