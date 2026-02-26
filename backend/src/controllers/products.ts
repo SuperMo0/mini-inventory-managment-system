@@ -41,6 +41,7 @@ export async function get_all_products(req: Request, res: Response) {
 }
 
 export async function create_new_product(req: Request<{}, any, NewProduct>, res: Response) {
+
     const { title, description } = req.body || {}
 
     if (!(title && description)) {
@@ -57,6 +58,9 @@ export async function create_new_product(req: Request<{}, any, NewProduct>, res:
     res.status(StatusCodes.CREATED).json({
         product
     })
+
+    req.log.info({ data: req.body }, "action:create-product")
+
 }
 
 export async function update_product_data(req: Request<{ productId: string }, any, UpdateProduct>, res: Response) {

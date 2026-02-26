@@ -5,12 +5,32 @@ import whRouter from './routes/wh.js'
 import { error_handler } from './middlewares/error_handler.js';
 import morgan from 'morgan'
 import helmet from 'helmet'
+import pino_http from 'pino-http'
+import pino from 'pino'
+import fs from 'fs';
+
 
 let app = express();
 
 app.use(helmet())
 
-app.use(morgan("tiny", {}))
+app.use(morgan("tiny"))
+
+/**
+ * this logging is just to keep things simple for now 
+ * we should create a prisma model "stock_changes" 
+ * use transation to make sure no event happens unless it's logged
+ * we can then query the database
+ */
+if (!fs.existsSync('./logs')) {
+  fs.mkdirSync('./logs');
+}
+const logStream = pino.destination('./logs/logs.log')
+app.use(pino_http({
+  quietReqLogger: true,
+  quietResLogger: true,
+  autoLogging: false,
+}, logStream))
 
 app.use(express.json())
 

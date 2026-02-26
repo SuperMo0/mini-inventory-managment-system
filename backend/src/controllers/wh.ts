@@ -124,6 +124,7 @@ export async function add_new_wh_product(req: Request<{ whId: string }, any, New
         whProduct
     })
 
+    req.log.info({ data: { productId, quantity, warehouseId: whId } }, "action:add_warehouse_stock")
 }
 
 export async function update_wh_product(req: Request<{ whId: string }, any, PatchWhProduct>, res: Response) {
@@ -151,6 +152,8 @@ export async function update_wh_product(req: Request<{ whId: string }, any, Patc
     res.json({
         whProduct: updatedWhProduct
     })
+
+    req.log.info({ data: { quantity, productId, warehouseId: whId } }, "action:update_warehouse_stock")
 }
 
 export async function transfer_wh_product(req: Request<{ whId: string }, any, TransferWhProduct>, res: Response) {
@@ -203,7 +206,7 @@ export async function transfer_wh_product(req: Request<{ whId: string }, any, Tr
         destinationWhProduct
     })
 
-
+    req.log.info({ data: { productId, quantity, warehouseId: whId, destinationId: destinationId } }, "action:transfer_warehouse_stock")
 }
 
 export async function get_wh_products(req: Request<{ whId: string }, any, any>, res: Response) {
@@ -239,4 +242,6 @@ export async function delete_wh_products(req: Request<{ whId: string }, any, Del
     })
 
     res.end()
+
+    req.log.info({ data: { productId, warehouseId: whId } }, "action:delete_warehouse_stock")
 }

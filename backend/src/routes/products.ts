@@ -6,8 +6,6 @@ import { validate_param_id } from "../middlewares/warehouse_id.js"
 let router = Router()
 router.param('productId', validate_param_id('productId'))
 
-let products = [{ name: "window", quantity: 22 }]
-
 router.get('/', controller.get_all_products)
 
 router.post('/', controller.create_new_product)

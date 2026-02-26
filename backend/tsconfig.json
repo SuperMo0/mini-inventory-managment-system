@@ -13,7 +13,8 @@
     "verbatimModuleSyntax": true,
     "types": [
       "vitest/globals",
-      "supertest"
+      "supertest",
+      "node"
     ]
   },
   "include": [
