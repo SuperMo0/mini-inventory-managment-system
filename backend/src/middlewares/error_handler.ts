@@ -9,7 +9,8 @@ export async function error_handler(err: Error, req: Request, res: Response, nex
 
     let message = process.env.NODE_ENV == "development" ? stack : null;
 
-    if (err instanceof Prisma.PrismaClientValidationError) {
+
+    if (err.name === 'DriverAdapterError' || err instanceof Prisma.PrismaClientValidationError || err instanceof Prisma.PrismaClientKnownRequestError) {
         return res.status(StatusCodes.BAD_REQUEST).json({ message: "Invalid request data" });
     }
 

@@ -8,6 +8,10 @@ type WareHouse = {
     description: string,
     title: string
 }
+type WareHouseExtra = WareHouse & {
+    total_items: number,
+    total_unique: number
+}
 
 type NewWareHouse = Omit<WareHouse, 'id' | 'created_at'>;
 
@@ -15,15 +19,14 @@ type UpdateWareHouse = Partial<NewWareHouse>
 
 export async function get_all_wh(req: Request, res: Response) {
 
-    // to be tested 
-    let warehouses: WareHouse[] = await prisma.$queryRaw`
+    let warehouses: WareHouseExtra[] = await prisma.$queryRaw`
     select
-        id,location, description, title, total_items, total_unique
+        id,location, description, title, coalesce(t.total_items,0)::int as total_items, coalesce(t.total_unique,0)::int as total_unique
     from warehouses
     left join(
     select
         warehouse_id,
-        count(*) as total_unique,
+        sum(case when quantity > 0 then 1 else 0 end) as total_unique,
         sum(quantity) as total_items
     from warehouse_product group by warehouse_id
     ) as t 
@@ -121,7 +124,7 @@ export async function update_wh_product(req: Request<{ whId: string }, any, Patc
     let { quantity, productId } = req.body
 
     quantity = Number(quantity)
-    if (!quantity && isNaN(quantity) || quantity < 0) {
+    if (!quantity && isNaN(quantity)) {
         return res.status(StatusCodes.BAD_REQUEST).end();
     }
 
@@ -146,6 +149,7 @@ export async function transfer_wh_product(req: Request<{ whId: string }, any, Tr
 
     const { destinationId, productId, quantity } = req.body
     const { whId } = req.params
+
     if (!(destinationId && productId && quantity)) {
         return res.status(StatusCodes.BAD_REQUEST).end();
     }
@@ -180,6 +184,13 @@ export async function transfer_wh_product(req: Request<{ whId: string }, any, Tr
 
         })
     ])
+
+    res.json({
+        sourceWhProduct,
+        destinationWhProduct
+    })
+
+
 }
 
 export function get_wh_products(req: Request, res: Response) {
