@@ -3,10 +3,14 @@ import express from "express";
 import productsRouter from './routes/products.js'
 import whRouter from './routes/wh.js'
 import { error_handler } from './middlewares/error_handler.js';
+import morgan from 'morgan'
+import helmet from 'helmet'
 
 let app = express();
 
+app.use(helmet())
 
+app.use(morgan("tiny", {}))
 
 app.use(express.json())
 
