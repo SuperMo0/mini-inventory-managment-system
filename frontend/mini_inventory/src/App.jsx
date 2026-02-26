@@ -9,14 +9,13 @@ function App() {
   const { name } = useData()
   return (<>
     <Header />
-    <Routes>
-      <Route path='/' element={Index}></Route>
-      <Route path='/products' element={Products}></Route>
-      <Route path='/warehouses' element={Warehouses}></Route>
-    </Routes>
-
-
-
+    <main className="main-content">
+      <Routes>
+        <Route path='/' element={<Index />}></Route>
+        <Route path='/products' element={<Products />}></Route>
+        <Route path='/warehouses' element={<Warehouses />}></Route>
+      </Routes>
+    </main>
   </>)
 }
 

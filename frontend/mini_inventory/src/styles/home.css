@@ -1,0 +1,43 @@
+.index-actions-container
+{
+    display: flex;
+    gap: 20px;
+    justify-content: center;
+    margin-top: 20px;       
+}
+
+.index-create-button
+{
+    padding: 10px 20px;
+    background-color: #007bff;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+}
+#index-title
+{
+    text-align: center;
+}
+
+.index-activity-container
+{
+    display: flex;
+    gap: 20px;
+    justify-content: center;
+    margin-top: 5px;   
+     background-color: #473f3f6e;
+    cursor: pointer;    
+}
+
+.index-main
+{
+    text-align: center;
+}
+
+.logs-container
+{
+    overflow-y: scroll;
+    height:500px;
+    background-color: #473f3f6e;
+    scrollbar-width: thin;
+}
