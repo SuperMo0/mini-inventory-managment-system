@@ -1,6 +1,6 @@
 .prodcuts-grid{
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
     gap: 1rem;
 }
 
@@ -10,4 +10,28 @@
     flex-basis: 0;
     overflow-y: scroll;
     scrollbar-width: thin;
+}
+.product-card{
+    border: 1px solid #86b4df;
+    border-radius: 8px;
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    cursor: pointer;
+}
+.product-card h2{
+    font-size: 1.5em;
+    margin: 0;
+    color: #0084ff;
+}
+.product-card p{
+    margin: 0;
+    color: #9ac4eb;
+}
+
+.product-card:hover{
+   transform: translateY(-2px);
+   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+   transition: transform 0.2s, box-shadow 0.2s; 
 }

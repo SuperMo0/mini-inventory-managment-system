@@ -20,7 +20,7 @@ export default function Products() {
             <h1>Products</h1>
             <div className="prodcuts-grid">
                 {products.map((product) => (
-                    <div key={product.id}>
+                    <div key={product.id} className='product-card'>
                         <h2>{product.title}</h2>
                         <p>{product.description}</p>
                         <p>Total: {product.total}</p>
