@@ -11,8 +11,8 @@ export async function error_handler(err: Error, req: Request, res: Response, nex
 
 
     if (err.name === 'DriverAdapterError' || err instanceof Prisma.PrismaClientValidationError || err instanceof Prisma.PrismaClientKnownRequestError) {
-        return res.status(StatusCodes.BAD_REQUEST).json({ message: "Invalid request data" });
+        return res.status(StatusCodes.BAD_REQUEST).json({ message });
     }
 
-    res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ message: stack });
+    res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ message });
 }
