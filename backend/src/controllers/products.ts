@@ -55,8 +55,10 @@ export async function create_new_product(req: Request<{}, any, NewProduct>, res:
         }
     })
 
+    let newProduct = { ...product, total: 0 }
+
     res.status(StatusCodes.CREATED).json({
-        product
+        product: newProduct
     })
 
     req.log.info({ data: req.body }, "action:create-product")
