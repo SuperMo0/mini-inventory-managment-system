@@ -23,7 +23,7 @@ router.post('/:whId/products/transfer', controller.transfer_wh_product);
 router.patch('/:whId/products', controller.update_wh_product);
 
 // to do: send productId via body for consistecny
-router.delete('/:whId/products/:productId', controller.delete_wh_products);
+router.delete('/:whId/products', controller.delete_wh_products);
 
 
 

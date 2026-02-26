@@ -91,6 +91,8 @@ type TransferWhProduct = NewWhProduct & {
     destinationId: string
 }
 
+type DeleteWhProduct = Pick<NewWhProduct, 'productId'>
+
 
 // warehouse/products routes
 // to be tested
@@ -147,6 +149,7 @@ export async function update_wh_product(req: Request<{ whId: string }, any, Patc
 
 export async function transfer_wh_product(req: Request<{ whId: string }, any, TransferWhProduct>, res: Response) {
 
+
     const { destinationId, productId, quantity } = req.body
     const { whId } = req.params
 
@@ -169,8 +172,8 @@ export async function transfer_wh_product(req: Request<{ whId: string }, any, Tr
                 }
             }
         }),
-        prisma.warehouse_product.update({
-            data: {
+        prisma.warehouse_product.upsert({
+            update: {
                 quantity: {
                     increment: Number(quantity)
                 }
@@ -180,8 +183,12 @@ export async function transfer_wh_product(req: Request<{ whId: string }, any, Tr
                     product_id: productId,
                     warehouse_id: destinationId
                 }
+            },
+            create: {
+                warehouse_id: destinationId,
+                product_id: productId,
+                quantity: Number(quantity)
             }
-
         })
     ])
 
@@ -193,12 +200,37 @@ export async function transfer_wh_product(req: Request<{ whId: string }, any, Tr
 
 }
 
-export function get_wh_products(req: Request, res: Response) {
-    res.status(201).send("Updated prodcut inside wh Successfuly");
+export async function get_wh_products(req: Request<{ whId: string }, any, any>, res: Response) {
+    const { whId } = req.params
+
+    let whProducts = await prisma.warehouse_product.findMany({
+        where: {
+            warehouse_id: whId
+        },
+        include: {
+            product: true
+        }
+    })
+
+    res.json(whProducts)
 }
 
 
 
-export function delete_wh_products(req: Request, res: Response) {
-    res.status(201).send("prodcut removed");
+export async function delete_wh_products(req: Request<{ whId: string }, any, DeleteWhProduct>, res: Response) {
+
+    const { productId } = req.body || {}
+
+    const { whId } = req.params
+
+    let response = await prisma.warehouse_product.delete({
+        where: {
+            warehouse_id_product_id: {
+                product_id: productId,
+                warehouse_id: whId
+            }
+        }
+    })
+
+    res.end()
 }

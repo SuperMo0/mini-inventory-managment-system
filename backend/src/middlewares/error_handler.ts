@@ -9,8 +9,10 @@ export async function error_handler(err: Error, req: Request, res: Response, nex
 
     let message = process.env.NODE_ENV == "development" ? stack : null;
 
-
+    // todo: we should check if error is prisma 'row not found' error and return not found instead
     if (err.name === 'DriverAdapterError' || err instanceof Prisma.PrismaClientValidationError || err instanceof Prisma.PrismaClientKnownRequestError) {
+        console.log(err);
+
         return res.status(StatusCodes.BAD_REQUEST).json({ message });
     }
 
