@@ -12,6 +12,12 @@
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   height: 100vh;
+  max-height: 100vh;
+  overflow: hidden;
+}
+
+* {
+  box-sizing: border-box;
 }
 
 a {
@@ -27,10 +33,14 @@ a:hover {
 body {
   margin: 0;
   max-height: 100vh;
-  padding-top: 1rem;
+  padding-block: 1rem;
   height:100%;
-  border: 1px solid tomato;
-  box-sizing: border-box;
+}
+
+#root {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
   overflow: hidden;
 }
 
@@ -59,7 +69,14 @@ button:focus-visible {
 }
 
 .main-content {
-  max-width: 1200px;
+  width: min(1200px, 100%);
   margin: 0 auto;
   padding: 2rem;
+  flex: 1;
+  flex-basis: 0;
+  display: flex;
+  flex-direction: column;
+  align-self: stretch;
+  align-items: stretch;
+  overflow: hidden;
 }

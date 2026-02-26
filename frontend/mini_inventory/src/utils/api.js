@@ -12,7 +12,7 @@ export const api = axios.create({
 export const getProducts = async () => {
     try {
         const response = await api.get("/products");
-        return response.data;
+        return response.data.products;
     } catch (error) {
         console.error("Error fetching products:", error);
         throw error;
@@ -22,7 +22,7 @@ export const getProducts = async () => {
 export const getWarehouses = async () => {
     try {
         const response = await api.get("/ws");
-        return response.data;
+        return response.data.warehouses;
     } catch (error) {
         console.error("Error fetching warehouses:", error);
         throw error;
@@ -32,7 +32,7 @@ export const getWarehouses = async () => {
 export const getWarehouseProducts = async (warehouseId) => {
     try {
         const response = await api.get(`/ws/${warehouseId}/products`);
-        return response.data;
+        return response.data.whProducts;
     } catch (error) {
         console.error(`Error fetching products for warehouse ${warehouseId}:`, error);
         throw error;

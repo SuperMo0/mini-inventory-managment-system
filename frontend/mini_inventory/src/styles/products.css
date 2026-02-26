@@ -1,0 +1,13 @@
+.prodcuts-grid{
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 1rem;
+}
+
+.products-main{
+    padding: 1rem;
+    flex: 1;
+    flex-basis: 0;
+    overflow-y: scroll;
+    scrollbar-width: thin;
+}
