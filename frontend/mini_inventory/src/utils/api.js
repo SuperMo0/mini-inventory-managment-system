@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const API_URL = "http://localhost:8000/api";
+const API_URL = "http://localhost:3000/api";
 
 export const api = axios.create({
     baseURL: API_URL,
@@ -28,3 +28,33 @@ export const getWarehouses = async () => {
         throw error;
     }
 };
+
+export const getWarehouseProducts = async (warehouseId) => {
+    try {
+        const response = await api.get(`/ws/${warehouseId}/products`);
+        return response.data;
+    } catch (error) {
+        console.error(`Error fetching products for warehouse ${warehouseId}:`, error);
+        throw error;
+    }
+};
+
+export const createProduct = async (productData) => {
+    try {
+        const response = await api.post("/products", productData);
+        return response.data;
+    } catch (error) {
+        console.error("Error creating product:", error);
+        throw error;
+    }
+}
+
+export const createWarehouse = async (warehouseData) => {
+    try {
+        const response = await api.post("/ws", warehouseData);
+        return response.data;
+    } catch (error) {
+        console.error("Error creating warehouse:", error);
+        throw error;
+    }
+}

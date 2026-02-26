@@ -1,7 +1,6 @@
 import { useState } from 'react'
 
 export default function WarehouseForm({ onClose, onSubmit }) {
-    description, location, title
     const [title, setTitle] = useState('');
     const [location, setLocation] = useState('');
     const [description, setDescription] = useState('');

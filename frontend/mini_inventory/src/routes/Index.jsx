@@ -6,14 +6,22 @@ export default function Index() {
 
     const [createPopup, setCreatePopup] = useState(null);
 
-
-    const handleCreateProduct = (productData) => {
-        console.log('Create Product button clicked with data:', productData);
+    const handleCreateProduct = async (productData) => {
+        try {
+            const response = await createProduct(productData);
+            console.log('Product created:', response);
+        } catch (error) {
+            console.error('Error creating product:', error);
+        }
     };
 
-    const handleCreateWarehouse = (warehouseData) => {
-
-        console.log('Create Warehouse button clicked with data:', warehouseData);
+    const handleCreateWarehouse = async (warehouseData) => {
+        try {
+            const response = await createWarehouse(warehouseData);
+            console.log('Warehouse created:', response);
+        } catch (error) {
+            console.error('Error creating warehouse:', error);
+        }
     };
 
     return (
