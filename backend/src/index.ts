@@ -8,11 +8,17 @@ import helmet from 'helmet'
 import pino_http from 'pino-http'
 import pino from 'pino'
 import fs from 'fs';
+import cors from 'cors'
+
 
 
 let app = express();
 
 app.use(helmet())
+
+app.use(cors({
+  origin: 'http://localhost:5173'
+}))
 
 app.use(morgan("tiny"))
 
