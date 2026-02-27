@@ -23,6 +23,7 @@ export async function get_all_products(req: Request, res: Response) {
     })
     /**
      * this is an O(N*M) operation where
+     * I did the raw faster query in get_all_wh controller 
      * N is the number of products
      * M is the number of warehouses that a product belong to
      * we can improve it by using a raw query instead 

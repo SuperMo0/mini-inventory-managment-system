@@ -1,4 +1,4 @@
-import 'dotenv/config'
+import './lib/node_env.js'
 import express from "express";
 import productsRouter from './routes/products.js'
 import whRouter from './routes/wh.js'
@@ -10,7 +10,6 @@ import pino from 'pino'
 import fs from 'fs';
 import cors from 'cors'
 import { prisma } from './lib/prisma.js'
-
 
 
 let app = express();
@@ -51,3 +50,5 @@ app.use(error_handler)
 app.listen(PORT, () => {
   console.log(`server is listening on port ${PORT}`);
 })
+
+export default app
