@@ -14,8 +14,11 @@ function App() {
       <Routes>
         <Route path='/' element={<Index />}></Route>
         <Route path='/products' element={<Products />}></Route>
-        <Route path='/warehouses' element={<Warehouses />}></Route>
-        <Route path='/warehouses/:whTitle' element={<Warehouse />}></Route>
+        <Route path='/warehouses'>
+          <Route index element={<Warehouses />} />
+          <Route path=':whTitle' element={<Warehouse />}></Route>
+        </Route>
+
       </Routes>
     </main>
   </>)
