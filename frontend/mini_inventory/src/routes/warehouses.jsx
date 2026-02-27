@@ -20,16 +20,11 @@ export default function Warehouses() {
     }
 
     const handleCreateWarehouse = async (warehouseData) => {
-        try {
-            // to improve: we can use optimistic here with fake id and then swap with the real one 
-            const response = await createWarehouse(warehouseData);
-            console.log(response);
-            const newWarehouse = response.warehouse;
-            setWarehouses([...warehouses, newWarehouse]);
-            setCreatePopup(null);
-        } catch (error) {
-            console.error('Error creating warehouse:', error);
-        }
+        // to improve: we can use optimistic here with fake id and then swap with the real one 
+        const response = await createWarehouse(warehouseData);
+        const newWarehouse = response.warehouse;
+        setWarehouses([...warehouses, newWarehouse]);
+        setCreatePopup(null);
     };
 
     return (

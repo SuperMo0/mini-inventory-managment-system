@@ -45,6 +45,10 @@ export default function Warehouse() {
     // we should definitely refactor this into two functions!
     async function handleUpdateProduct(data, actionType) {
         if (actionType === "update") {
+            if (!data.quantity) {
+                alert("Please enter a quantity.");
+                return;
+            }
             try {
                 const warehouseProduct = await updateWarehouseProductQuantity(warehouseId, data);
                 setWarehousesProducts(prev => {
@@ -63,6 +67,10 @@ export default function Warehouse() {
             }
         }
         else if (actionType === "transfer") {
+            if (!data.transferQuantity || !data.destinationWarehouse) {
+                alert("Please enter a quantity and select a destination warehouse.");
+                return;
+            }
             try {
                 const { sourceWhProduct, destinationWhProduct } = await transferProductBetweenWarehouses(warehouseId, data);
                 setWarehousesProducts(prev => {
