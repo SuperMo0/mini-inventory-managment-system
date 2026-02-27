@@ -21,7 +21,7 @@ export const getProducts = async () => {
 
 export const getWarehouses = async () => {
     try {
-        const response = await api.get("/ws");
+        const response = await api.get("/wh");
         return response.data.warehouses;
     } catch (error) {
         console.error("Error fetching warehouses:", error);
@@ -31,7 +31,7 @@ export const getWarehouses = async () => {
 
 export const getWarehouseProducts = async (warehouseId) => {
     try {
-        const response = await api.get(`/ws/${warehouseId}/products`);
+        const response = await api.get(`/wh/${warehouseId}/products`);
         return response.data.whProducts;
     } catch (error) {
         console.error(`Error fetching products for warehouse ${warehouseId}:`, error);
@@ -51,7 +51,7 @@ export const createProduct = async (productData) => {
 
 export const createWarehouse = async (warehouseData) => {
     try {
-        const response = await api.post("/ws", warehouseData);
+        const response = await api.post("/wh", warehouseData);
         return response.data;
     } catch (error) {
         console.error("Error creating warehouse:", error);

@@ -1,55 +1,56 @@
-.prodcuts-grid{
+.warehouses-grid{
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: 1rem;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
     width: 100%;
 }
-.grid-container{
-    padding-top: 1rem;
-    display: flex;
-    flex:1;
-    flex-basis: 0;
-    overflow-y: auto;
-    scrollbar-width: thin;
-    flex-direction: column;
-}
-.products-main{
-    padding: 1rem;
+.warehouses-main{
+   padding: 1rem;
     flex: 1;
     flex-basis: 0;
     display: flex;
     flex-direction: column;
 }
-.product-card{
-    border: 1px solid #86b4df;
+.grid-container{
+    padding-top: 1rem;
+    display: flex;
+    flex-direction: column;
+    flex:1;
+    flex-basis: 0;
+    overflow-y: auto;
+    scrollbar-width: thin;
+}
+
+.warehouse-card{
+     border: 1px solid #86b4df;
     border-radius: 8px;
     padding: 1rem;
-    display: grid;
-    grid-template-rows: subgrid;
-    grid-row: span 3;
+    display: flex;
+    flex-direction: column;
     gap: 0.5rem;
     cursor: pointer;
     height: fit-content;
 }
-.product-card h2{
-    font-size: 1.5em;
-    margin: 0;
-    color: #0084ff;
-}
-.product-card p{
-    margin: 0;
-    color: #9ac4eb;
-}
 
-.product-card:hover{
-   transform: translateY(-2px);
-   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-   transition: transform 0.2s, box-shadow 0.2s; 
-}
-
-.products-header{
+.warehouses-header{
     display: flex;
     justify-content: space-between;
     align-items: center;
     margin-bottom: 1rem;
+}
+
+.warehouse-card h2{
+    font-size: 1.5em;
+    margin: 0;
+    color: #0084ff;
+}
+.warehouse-card p{
+    margin: 0;
+    color: #9ac4eb;
+}
+
+.warehouse-card:hover{
+   transform: translateY(-2px);
+   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+   transition: transform 0.2s, box-shadow 0.2s; 
 }

@@ -38,15 +38,16 @@ export default function Products() {
                 <h1>Products</h1>
                 <button id='create-product-button' className="index-create-button" onClick={() => { setCreatePopup("product") }}>Create Product</button>
             </div>
-
-            <div className="prodcuts-grid">
-                {products.map((product) => (
-                    <div key={product.id} className='product-card'>
-                        <h2>{product.title}</h2>
-                        <p>{product.description}</p>
-                        <p>Total: {product.total}</p>
-                    </div>
-                ))}
+            <div className="grid-container">
+                <div className="prodcuts-grid">
+                    {products.map((product) => (
+                        <div key={product.id} className='product-card'>
+                            <h2>{product.title}</h2>
+                            <p>{product.description}</p>
+                            <p>Total: {product.total}</p>
+                        </div>
+                    ))}
+                </div>
             </div>
             {createPopup === "product" && (
                 <div className="popup-overlay">

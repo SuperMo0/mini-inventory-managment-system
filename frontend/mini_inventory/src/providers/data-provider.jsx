@@ -7,6 +7,8 @@ import { getProducts, getWarehouses } from '../utils/api';
 export const DataContext = createContext(null)
 
 export default function Data({ children }) {
+
+    // todo: add is loading states
     const [warehouses, setWarehouses] = useState(null);
 
     const [products, setProducts] = useState(null);
