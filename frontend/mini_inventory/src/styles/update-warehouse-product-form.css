@@ -1,0 +1,12 @@
+.action-choices-container
+{
+    display: flex;
+    gap: 10px;  
+}
+
+.warehouse-product-transfer-form
+{
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}   

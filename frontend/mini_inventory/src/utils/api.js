@@ -66,7 +66,7 @@ export const addProductToWarehouse = async (warehouseId, productId, quantity) =>
             productId,
             quantity
         });
-        return response.data;
+        return response.data.warehouseProduct;
     } catch (error) {
         console.error(`Error adding product ${productId} to warehouse ${warehouseId}:`, error);
         throw error;
@@ -82,3 +82,16 @@ export const removeProductFromWarehouse = async (warehouseId, productId) => {
         throw error;
     }
 };
+
+export const updateWarehouseProductQuantity = async (warehouseId, productId, quantity) => {
+    try {
+        const response = await api.put(`/wh/${warehouseId}/products`, {
+            productId,
+            quantity
+        });
+        return response.data.warehouseProduct;
+    } catch (error) {
+        console.error(`Error updating quantity of product ${productId} in warehouse ${warehouseId}:`, error);
+        throw error;
+    }
+}

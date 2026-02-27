@@ -3,7 +3,7 @@ import { useLocation, useParams } from 'react-router';
 import { useData } from '../providers/data-provider';
 import '../styles/products.css'
 import WarehouseProductForm from '../components/warehouse-product-form';
-import { addProductToWarehouse } from '../utils/api';
+import { addProductToWarehouse, updateWarehouseProductQuantity } from '../utils/api';
 import UpdateWarehouseProductForm from '../components/update-warehouse-product-form';
 
 export default function Warehouse() {
@@ -28,17 +28,39 @@ export default function Warehouse() {
 
     async function handleCreateProduct(productData) {
         try {
-            const response = await addProductToWarehouse(warehouseId, productData.productId, productData.quantity);
+            const warehouseProduct = await addProductToWarehouse(warehouseId, productData.productId, productData.quantity);
             setWarehousesProducts(prev => {
                 const updated = new Map(prev);
                 const current = updated.get(warehouseId) || [];
-                updated.set(warehouseId, [...current, response.whProduct]);
+                updated.set(warehouseId, [...current, warehouseProduct]);
                 return updated;
             });
             setaddPopup(false);
         } catch (error) {
             console.error('Error creating product:', error);
         }
+    }
+
+    async function handleUpdateProduct(data, actionType) {
+        if (actionType === "update") {
+            try {
+                const warehouseProduct = await updateWarehouseProductQuantity(warehouseId, data.id, data.quantity);
+                setWarehousesProducts(prev => {
+                    const updated = new Map(prev);
+                    const current = updated.get(warehouseId) || [];
+                    const index = current.findIndex(p => p.product.id === data.id);
+                    if (index !== -1) {
+                        current[index] = { ...current[index], quantity: warehouseProduct.quantity };
+                        updated.set(warehouseId, [...current]);
+                    }
+                    return updated;
+                });
+                setUpdatePopup(null);
+            } catch (error) {
+                console.error('Error updating product:', error);
+            }
+        }
+
     }
 
     if (!warehousesProducts || !warehousesProducts.get(warehouseId)) {
@@ -74,7 +96,7 @@ export default function Warehouse() {
             {updatePopup && (
                 <div className="popup-overlay">
                     <div className="popup">
-                        <UpdateWarehouseProductForm onClose={() => setUpdatePopup(null)} product={updatePopup} />
+                        <UpdateWarehouseProductForm onClose={() => setUpdatePopup(null)} onSubmit={handleUpdateProduct} product={updatePopup} />
                     </div>
                 </div>
             )}
