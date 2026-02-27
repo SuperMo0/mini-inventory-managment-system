@@ -13,7 +13,7 @@ export default function Data({ children }) {
 
     const [products, setProducts] = useState(null);
 
-    const [warehouseProducts, setWarehouseProducts] = useState(null);
+    const [warehousesProducts, setWarehousesProducts] = useState(null);
 
     const fetchProducts = async () => {
         try {
@@ -36,9 +36,9 @@ export default function Data({ children }) {
     const fetchWarehouseProducts = async (warehouseId) => {
         try {
             const whProductsData = await getWarehouseProducts(warehouseId);
-            let newWarehouseProducts = new Map(warehouseProducts);
-            newWarehouseProducts.set(warehouseId, whProductsData);
-            setWarehouseProducts(newWarehouseProducts);
+            let newWarehousesProducts = new Map(warehousesProducts);
+            newWarehousesProducts.set(warehouseId, whProductsData);
+            setWarehousesProducts(newWarehousesProducts);
         } catch (error) {
             console.error(`Error fetching products for warehouse ${warehouseId}:`, error);
         }
@@ -48,13 +48,13 @@ export default function Data({ children }) {
         <DataContext.Provider value={{
             warehouses,
             products,
-            warehouseProducts,
+            warehousesProducts,
             fetchProducts,
             fetchWarehouses,
             fetchWarehouseProducts,
             setWarehouses,
             setProducts,
-            setWarehouseProducts
+            setWarehousesProducts
         }}>
             {children}
         </DataContext.Provider>

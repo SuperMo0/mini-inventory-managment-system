@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import WarehouseForm from '../components/WarehouseForm';
+import WarehouseForm from '../components/warehouse-form';
 import { useData } from '../providers/data-provider';
 import { createWarehouse } from '../utils/api';
 import '../styles/warehouses.css'

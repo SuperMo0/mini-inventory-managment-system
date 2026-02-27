@@ -1,5 +1,5 @@
 import ProductForm from '../components/ProductForm';
-import WarehouseForm from '../components/WarehouseForm';
+import WarehouseForm from '../components/warehouse-form';
 import { useData } from '../providers/data-provider';
 import { createProduct } from '../utils/api';
 import './../styles/home.css'

@@ -1,4 +1,5 @@
 import axios from "axios";
+import { data } from "react-router";
 
 const API_URL = "http://localhost:3000/api";
 
@@ -58,3 +59,26 @@ export const createWarehouse = async (warehouseData) => {
         throw error;
     }
 }
+
+export const addProductToWarehouse = async (warehouseId, productId, quantity) => {
+    try {
+        const response = await api.post(`/wh/${warehouseId}/products`, {
+            productId,
+            quantity
+        });
+        return response.data;
+    } catch (error) {
+        console.error(`Error adding product ${productId} to warehouse ${warehouseId}:`, error);
+        throw error;
+    }
+}
+
+export const removeProductFromWarehouse = async (warehouseId, productId) => {
+    try {
+        const response = await api.delete(`/wh/${warehouseId}/products`, { productId });
+        return response.data;
+    } catch (error) {
+        console.error(`Error removing product ${productId} from warehouse ${warehouseId}:`, error);
+        throw error;
+    }
+};
