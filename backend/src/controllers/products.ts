@@ -62,9 +62,6 @@ export async function create_new_product(req: Request<{}, any, NewProduct>, res:
     res.status(StatusCodes.CREATED).json({
         product: newProduct
     })
-
-    req.log.info({ data: req.body }, "action:create-product")
-
 }
 
 export async function update_product_data(req: Request<{ productId: string }, any, UpdateProduct>, res: Response) {
