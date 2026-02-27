@@ -1,8 +1,7 @@
 import React, { useContext } from 'react'
 import { useState } from 'react';
-
 import { createContext } from 'react';
-import { getProducts, getWarehouses, getWarehouseProducts } from '../utils/api';
+import { getProducts, getWarehouses, getWarehouseProducts, getLogs } from '../utils/api';
 
 export const DataContext = createContext(null)
 
@@ -15,6 +14,17 @@ export default function Data({ children }) {
 
     const [warehousesProducts, setWarehousesProducts] = useState(null);
 
+    const [logs, setLogs] = useState(null);
+
+
+    const fetchLogs = async () => {
+        try {
+            const logsData = await getLogs();
+            setLogs(logsData);
+        } catch (error) {
+            console.error("Error fetching logs:", error);
+        }
+    };
     const fetchProducts = async () => {
         try {
             const productsData = await getProducts();
@@ -49,12 +59,14 @@ export default function Data({ children }) {
             warehouses,
             products,
             warehousesProducts,
+            logs,
             fetchProducts,
             fetchWarehouses,
             fetchWarehouseProducts,
             setWarehouses,
             setProducts,
-            setWarehousesProducts
+            setWarehousesProducts,
+            fetchLogs,
         }}>
             {children}
         </DataContext.Provider>

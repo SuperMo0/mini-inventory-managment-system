@@ -42,7 +42,7 @@ model warehouse_product {
 model stock_changes {
   id                          Int      @id @default(autoincrement())
   product_title               String
-  action                      String // remove, transfer, update, add
+  action                      String // remove, transfer, update
   source_warehouse_title      String
   destination_warehouse_title String?
   created_at                  DateTime @default(now())
@@ -52,3 +52,5 @@ model stock_changes {
   @@index([source_warehouse_title]) // if we want to query a specific warehouse stock history 
   @@index([product_title])
 }
+
+// we can also have another model for creating products or warehouses 

@@ -53,7 +53,7 @@ export default function Warehouse() {
                 const warehouseProduct = await updateWarehouseProductQuantity(warehouseId, data);
                 setWarehousesProducts(prev => {
                     const updated = new Map(prev);
-                    const current = updated.get(warehouseId) || [];
+                    const current = [...updated.get(warehouseId)];
                     const index = current.findIndex(p => p.product.id === data.id);
                     if (index !== -1) {
                         current[index] = { ...current[index], quantity: warehouseProduct.quantity };
@@ -73,16 +73,16 @@ export default function Warehouse() {
             }
             try {
                 const { sourceWhProduct, destinationWhProduct } = await transferProductBetweenWarehouses(warehouseId, data);
+
                 setWarehousesProducts(prev => {
                     const updated = new Map(prev);
-                    const current = updated.get(warehouseId) || [];
+                    const current = [...updated.get(warehouseId)];
                     const index = current.findIndex(p => p.product.id === data.id);
-                    if (index !== -1) {
-                        current.splice(index, 1);
-                        updated.set(warehouseId, current);
-                    }
-                    const destinationCurrent = updated.get(data.destinationWarehouse);
-                    if (destinationCurrent) {
+                    current[index] = { ...current[index], quantity: sourceWhProduct.quantity };
+                    updated.set(warehouseId, current);
+
+                    if (updated.get(data.destinationWarehouse)) {
+                        const destinationCurrent = [...updated.get(data.destinationWarehouse)];
                         const destIndex = destinationCurrent.findIndex(p => p.product.id === data.id);
                         if (destIndex !== -1) {
                             destinationCurrent[destIndex] = { ...destinationCurrent[destIndex], quantity: destinationWhProduct.quantity };
@@ -91,8 +91,10 @@ export default function Warehouse() {
                         }
                         updated.set(data.destinationWarehouse, destinationCurrent);
                     }
+
                     return updated;
                 });
+
                 setUpdatePopup(null);
             } catch (error) {
                 console.error('Error transferring product:', error);

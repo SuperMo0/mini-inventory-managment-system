@@ -20,6 +20,16 @@ export const getProducts = async () => {
     }
 };
 
+export const getLogs = async () => {
+    try {
+        const response = await api.get("/logs");
+        return response.data.logs;
+    } catch (error) {
+        console.error("Error fetching logs:", error);
+        throw error;
+    }
+};
+
 export const getWarehouses = async () => {
     try {
         const response = await api.get("/wh");

@@ -3,13 +3,17 @@ import WarehouseForm from '../components/warehouse-form';
 import { useData } from '../providers/data-provider';
 import { createProduct } from '../utils/api';
 import './../styles/home.css'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
+import { formatEvent } from '../utils/event';
 export default function Index() {
 
     const [createPopup, setCreatePopup] = useState(null);
 
-    const { products, warehouses, fetchProducts, fetchWarehouses, setProducts, setWarehouses } = useData();
+    const { logs, fetchLogs } = useData();
 
+    useEffect(() => {
+        fetchLogs();
+    }, [])
     const handleCreateWarehouse = async (warehouseData) => {
         try {
             const response = await createWarehouse(warehouseData);
@@ -18,6 +22,10 @@ export default function Index() {
             console.error('Error creating warehouse:', error);
         }
     };
+
+    if (!logs) {
+        return <div>Loading...</div>
+    }
 
     return (
         <div className='index-main'>
@@ -28,10 +36,11 @@ export default function Index() {
             <div className="activity-logs">
                 <h2>Recent Activity</h2>
                 <div className="logs-container">
-                    <div className="index-activity-container">
-                        <p className='index-activity'>created product with title "Wireless Mouse"</p>
-                        <p className='index-activity-time'>2026-02-09 10:30 AM</p>
-                    </div>
+                    {logs.map((log, index) => (
+                        <div key={index} className="index-activity-container">
+                            <p>{formatEvent(log)}</p>
+                        </div>
+                    ))}
                 </div>
             </div>
             {createPopup === "warehouse" && (

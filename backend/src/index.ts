@@ -9,6 +9,7 @@ import pino_http from 'pino-http'
 import pino from 'pino'
 import fs from 'fs';
 import cors from 'cors'
+import { prisma } from './lib/prisma.js'
 
 
 
@@ -22,27 +23,26 @@ app.use(cors({
 
 app.use(morgan("tiny"))
 
-/**
- * this logging is just to keep things simple for now 
- * we should create a prisma model "stock_changes" 
- * use transation to make sure no event happens unless it's logged
- * we can then query the database
- */
-if (!fs.existsSync('./logs')) {
-  fs.mkdirSync('./logs');
-}
-const logStream = pino.destination('./logs/logs.log')
-app.use(pino_http({
-  quietReqLogger: true,
-  quietResLogger: true,
-  autoLogging: false,
-}, logStream))
-
 app.use(express.json())
 
 app.use('/api/products', productsRouter)
 
 app.use('/api/wh', whRouter)
+
+
+
+// we should Implement pagination 
+app.get('/api/logs', async (req, res) => {
+  let logs = await prisma.stock_changes.findMany({
+    take: 20,
+    orderBy: {
+      created_at: 'desc'
+    }
+  })
+  res.json({
+    logs
+  })
+})
 
 let PORT = process.env.PORT || 3000
 

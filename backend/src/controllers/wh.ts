@@ -1,6 +1,7 @@
 import type { Request, Response } from "express";
 import { prisma } from "../lib/prisma";
 import { StatusCodes } from "http-status-codes";
+import { log_stock_change } from './../lib/logger'
 
 type WareHouse = {
     id: string,
@@ -46,7 +47,7 @@ export async function create_new_wh(req: Request<{}, any, NewWareHouse>, res: Re
         return res.status(StatusCodes.BAD_REQUEST).end();
     }
 
-    let newWareHouse: WareHouse = await prisma.warehouses.create({
+    let newWarehouse: WareHouse = await prisma.warehouses.create({
         data: {
             description,
             location,
@@ -54,13 +55,18 @@ export async function create_new_wh(req: Request<{}, any, NewWareHouse>, res: Re
         }
     })
 
+    let updatedNewWarehouse = {
+        ...newWarehouse,
+        total_items: 0,
+        total_unique: 0
+    }
     res.status(StatusCodes.CREATED).json({
-        warehouse: newWareHouse
+        warehouse: updatedNewWarehouse
     })
 }
 
 export async function update_wh_data(req: Request<{ whId: string }, any, UpdateWareHouse>, res: Response) {
-
+    // this endpoint is still not used in the app 
     const { location, description, title } = req.body
 
     const whId = req.params.whId
@@ -82,12 +88,6 @@ export async function update_wh_data(req: Request<{ whId: string }, any, UpdateW
 }
 
 
-
-
-
-
-
-
 type NewWhProduct = {
     productId: string,
     quantity: string | number
@@ -104,24 +104,25 @@ type DeleteWhProduct = Pick<NewWhProduct, 'productId'>
 // warehouse/products routes
 export async function add_new_wh_product(req: Request<{ whId: string }, any, NewWhProduct>, res: Response) {
 
-    console.log(req.body);
-
     const { whId } = req.params
 
-    const { productId, quantity = 0 } = req.body || {};
+    let { productId, quantity } = req.body || {};
 
-    if (!(productId && quantity)) {
+    if (!productId || quantity === undefined || quantity === null) {       // or maybe it's negative! we should use zod or express validator
         return res.status(StatusCodes.BAD_REQUEST).end();
     }
+
+    quantity = Number(quantity)
 
     let whProduct = await prisma.warehouse_product.create({
         data: {
             product_id: productId,
-            quantity: Number(quantity),
+            quantity: quantity,
             warehouse_id: whId
         },
         include: {
-            product: true
+            product: true,
+            warehouse: true,
         }
     })
 
@@ -129,16 +130,22 @@ export async function add_new_wh_product(req: Request<{ whId: string }, any, New
         warehouseProduct: whProduct
     })
 
-    req.log.info({ data: { productId, quantity, warehouseId: whId } }, "action:add_warehouse_stock")
+    //  better use transtion to be sure that the event is logged or the whole operation fail
+    log_stock_change('update', {
+        source_warehouse_title: whProduct.warehouse.title,
+        quantity: quantity,
+        product_title: whProduct.product.title
+    })
+
 }
 
 export async function update_wh_product(req: Request<{ whId: string }, any, PatchWhProduct>, res: Response) {
 
     const { whId } = req.params
-    let { quantity, productId } = req.body
+    let { quantity, productId } = req.body || {}
 
     quantity = Number(quantity)
-    if (!quantity && isNaN(quantity)) {
+    if (!quantity || isNaN(quantity) || !productId) {   // again we can use zod to make our life easier or express validator
         return res.status(StatusCodes.BAD_REQUEST).end();
     }
 
@@ -151,6 +158,10 @@ export async function update_wh_product(req: Request<{ whId: string }, any, Patc
                 warehouse_id: whId,
                 product_id: productId
             }
+        },
+        include: {
+            warehouse: true,
+            product: true
         }
     })
 
@@ -158,7 +169,12 @@ export async function update_wh_product(req: Request<{ whId: string }, any, Patc
         warehouseProduct: updatedWhProduct
     })
 
-    req.log.info({ data: { quantity, productId, warehouseId: whId } }, "action:update_warehouse_stock")
+    log_stock_change('update', {
+        source_warehouse_title: updatedWhProduct.warehouse.title,
+        quantity: quantity,
+        product_title: updatedWhProduct.product.title
+    })
+
 }
 
 export async function transfer_wh_product(req: Request<{ whId: string }, any, TransferWhProduct>, res: Response) {
@@ -185,7 +201,8 @@ export async function transfer_wh_product(req: Request<{ whId: string }, any, Tr
                 }
             },
             include: {
-                product: true
+                product: true,
+                warehouse: true
             }
         }),
         prisma.warehouse_product.upsert({
@@ -206,7 +223,8 @@ export async function transfer_wh_product(req: Request<{ whId: string }, any, Tr
                 quantity: Number(quantity)
             },
             include: {
-                product: true
+                product: true,
+                warehouse: true,
             }
         })
     ])
@@ -216,7 +234,13 @@ export async function transfer_wh_product(req: Request<{ whId: string }, any, Tr
         destinationWhProduct
     })
 
-    req.log.info({ data: { productId, quantity, warehouseId: whId, destinationId: destinationId } }, "action:transfer_warehouse_stock")
+    log_stock_change('transfer', {
+        source_warehouse_title: sourceWhProduct.warehouse.title,
+        quantity: quantity,
+        product_title: sourceWhProduct.product.title,
+        destination_warehouse_title: destinationWhProduct.warehouse.title
+    })
+
 }
 
 
@@ -250,10 +274,18 @@ export async function delete_wh_products(req: Request<{ whId: string }, any, Del
                 product_id: productId,
                 warehouse_id: whId
             }
+        },
+        include: {
+            product: true,
+            warehouse: true
         }
     })
 
     res.end()
 
-    req.log.info({ data: { productId, warehouseId: whId } }, "action:delete_warehouse_stock")
+    log_stock_change('remove', {
+        source_warehouse_title: response.warehouse.title,
+        quantity: response.quantity,
+        product_title: response.product.title
+    })
 }
