@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { useData } from './providers/data-provider'
 import { Route, Routes } from 'react-router'
-import Index from './routes/Index'
+import Index from './routes/home'
 import Products from './routes/products'
 import Warehouses from './routes/warehouses'
 import Header from './components/header'
