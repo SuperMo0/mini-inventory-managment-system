@@ -34,7 +34,7 @@ export default function Index() {
                 <button id='create-warehouse-button' className="index-create-button" onClick={() => { setCreatePopup("warehouse") }}>Create Warehouse</button>
             </div>
             <div className="activity-logs">
-                <h2>Recent Activity</h2>
+                <h2>Recent Stock Movments</h2>
                 <div className="logs-container">
                     {logs.map((log, index) => (
                         <div key={index} className="index-activity-container">
