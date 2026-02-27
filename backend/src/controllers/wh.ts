@@ -163,7 +163,6 @@ export async function update_wh_product(req: Request<{ whId: string }, any, Patc
 
 export async function transfer_wh_product(req: Request<{ whId: string }, any, TransferWhProduct>, res: Response) {
 
-
     const { destinationId, productId, quantity } = req.body
     const { whId } = req.params
 
@@ -184,6 +183,9 @@ export async function transfer_wh_product(req: Request<{ whId: string }, any, Tr
                     product_id: productId,
                     warehouse_id: whId
                 }
+            },
+            include: {
+                product: true
             }
         }),
         prisma.warehouse_product.upsert({
@@ -202,6 +204,9 @@ export async function transfer_wh_product(req: Request<{ whId: string }, any, Tr
                 warehouse_id: destinationId,
                 product_id: productId,
                 quantity: Number(quantity)
+            },
+            include: {
+                product: true
             }
         })
     ])

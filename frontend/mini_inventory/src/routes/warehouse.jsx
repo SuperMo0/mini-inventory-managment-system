@@ -3,7 +3,7 @@ import { useLocation, useParams } from 'react-router';
 import { useData } from '../providers/data-provider';
 import '../styles/products.css'
 import WarehouseProductForm from '../components/warehouse-product-form';
-import { addProductToWarehouse, updateWarehouseProductQuantity } from '../utils/api';
+import { addProductToWarehouse, updateWarehouseProductQuantity, transferProductBetweenWarehouses } from '../utils/api';
 import UpdateWarehouseProductForm from '../components/update-warehouse-product-form';
 
 export default function Warehouse() {
@@ -41,17 +41,19 @@ export default function Warehouse() {
         }
     }
 
+    // we can use immer here to reduce the ugliness of react 
+    // we should definitely refactor this into two functions!
     async function handleUpdateProduct(data, actionType) {
         if (actionType === "update") {
             try {
-                const warehouseProduct = await updateWarehouseProductQuantity(warehouseId, data.id, data.quantity);
+                const warehouseProduct = await updateWarehouseProductQuantity(warehouseId, data);
                 setWarehousesProducts(prev => {
                     const updated = new Map(prev);
                     const current = updated.get(warehouseId) || [];
                     const index = current.findIndex(p => p.product.id === data.id);
                     if (index !== -1) {
                         current[index] = { ...current[index], quantity: warehouseProduct.quantity };
-                        updated.set(warehouseId, [...current]);
+                        updated.set(warehouseId, current);
                     }
                     return updated;
                 });
@@ -60,7 +62,34 @@ export default function Warehouse() {
                 console.error('Error updating product:', error);
             }
         }
-
+        else if (actionType === "transfer") {
+            try {
+                const { sourceWhProduct, destinationWhProduct } = await transferProductBetweenWarehouses(warehouseId, data);
+                setWarehousesProducts(prev => {
+                    const updated = new Map(prev);
+                    const current = updated.get(warehouseId) || [];
+                    const index = current.findIndex(p => p.product.id === data.id);
+                    if (index !== -1) {
+                        current.splice(index, 1);
+                        updated.set(warehouseId, current);
+                    }
+                    const destinationCurrent = updated.get(data.destinationWarehouse);
+                    if (destinationCurrent) {
+                        const destIndex = destinationCurrent.findIndex(p => p.product.id === data.id);
+                        if (destIndex !== -1) {
+                            destinationCurrent[destIndex] = { ...destinationCurrent[destIndex], quantity: destinationWhProduct.quantity };
+                        } else {
+                            destinationCurrent.push(destinationWhProduct);
+                        }
+                        updated.set(data.destinationWarehouse, destinationCurrent);
+                    }
+                    return updated;
+                });
+                setUpdatePopup(null);
+            } catch (error) {
+                console.error('Error transferring product:', error);
+            }
+        }
     }
 
     if (!warehousesProducts || !warehousesProducts.get(warehouseId)) {

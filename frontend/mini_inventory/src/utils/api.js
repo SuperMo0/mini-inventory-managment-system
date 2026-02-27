@@ -83,15 +83,29 @@ export const removeProductFromWarehouse = async (warehouseId, productId) => {
     }
 };
 
-export const updateWarehouseProductQuantity = async (warehouseId, productId, quantity) => {
+export const updateWarehouseProductQuantity = async (warehouseId, data) => {
     try {
-        const response = await api.put(`/wh/${warehouseId}/products`, {
-            productId,
-            quantity
+        const response = await api.patch(`/wh/${warehouseId}/products`, {
+            productId: data.id,
+            quantity: data.quantity
         });
         return response.data.warehouseProduct;
     } catch (error) {
-        console.error(`Error updating quantity of product ${productId} in warehouse ${warehouseId}:`, error);
+        console.error(`Error updating quantity of product ${data.id} in warehouse ${warehouseId}:`, error);
+        throw error;
+    }
+}
+
+export const transferProductBetweenWarehouses = async (sourceWarehouseId, data) => {
+    try {
+        const response = await api.post(`/wh/${sourceWarehouseId}/products/transfer`, {
+            destinationId: data.destinationWarehouse,
+            productId: data.id,
+            quantity: data.transferQuantity
+        });
+        return response.data;
+    } catch (error) {
+        console.error(`Error transferring product ${data.id} from warehouse ${sourceWarehouseId} to warehouse ${data.destinationWarehouse}:`, error);
         throw error;
     }
 }

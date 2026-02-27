@@ -33,7 +33,7 @@ export default function UpdateWarehouseProductForm({ onClose, onSubmit, product 
                         ))}
                     </select>
                     <label htmlFor="quantity">Quantity to Transfer:</label>
-                    <input type="number" id="quantity" name="quantity" value={transferQuantity} onChange={(e) => setTransferQuantity(e.target.value)} required />
+                    <input type="number" id="quantity" name="quantity" value={transferQuantity} onChange={(e) => { if (e.target.value < 0) e.target.value = 0; setTransferQuantity(Math.min(product.quantity, e.target.value)) }} required />
                     <button type="submit" onClick={(e) => { e.preventDefault(); onSubmit({ ...product, transferQuantity, destinationWarehouse }, "transfer"); setActionType("choosing"); }}>Transfer</button>
                     <button type='button' onClick={() => setActionType("choosing")}>Back</button>
                 </div>
@@ -46,7 +46,7 @@ export default function UpdateWarehouseProductForm({ onClose, onSubmit, product 
                     <p>Current Quantity: {product.quantity}</p>
                     <form>
                         <label htmlFor="quantity">New Quantity:</label>
-                        <input type="number" id="quantity" name="quantity" value={quantity} onChange={(e) => setQuantity(e.target.value)} required />
+                        <input type="number" id="quantity" name="quantity" value={quantity} onChange={(e) => { if (e.target.value < 0) e.target.value = 0; setQuantity(e.target.value) }} required />
                         <button type="submit" onClick={(e) => { e.preventDefault(); onSubmit({ ...product, quantity }, "update"); setActionType("choosing"); }}>Update</button>
                         <button type='button' onClick={() => setActionType("choosing")}>Back</button>
                     </form>
