@@ -32,7 +32,7 @@ export const getWarehouses = async () => {
 export const getWarehouseProducts = async (warehouseId) => {
     try {
         const response = await api.get(`/wh/${warehouseId}/products`);
-        return response.data.whProducts;
+        return response.data.warehouseProducts;
     } catch (error) {
         console.error(`Error fetching products for warehouse ${warehouseId}:`, error);
         throw error;
