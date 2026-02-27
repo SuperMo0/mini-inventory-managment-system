@@ -55,7 +55,7 @@ export async function create_new_wh(req: Request<{}, any, NewWareHouse>, res: Re
     })
 
     res.status(StatusCodes.CREATED).json({
-        wareHouse: newWareHouse
+        warehouse: newWareHouse
     })
 }
 
@@ -77,7 +77,7 @@ export async function update_wh_data(req: Request<{ whId: string }, any, UpdateW
     })
     if (!updatedWareHouse) { return res.status(StatusCodes.BAD_REQUEST).end() }
     return res.json({
-        wareHouse: updatedWareHouse
+        warehouse: updatedWareHouse
     })
 }
 
@@ -104,6 +104,8 @@ type DeleteWhProduct = Pick<NewWhProduct, 'productId'>
 // warehouse/products routes
 export async function add_new_wh_product(req: Request<{ whId: string }, any, NewWhProduct>, res: Response) {
 
+    console.log(req.body);
+
     const { whId } = req.params
 
     const { productId, quantity = 0 } = req.body || {};
@@ -117,11 +119,14 @@ export async function add_new_wh_product(req: Request<{ whId: string }, any, New
             product_id: productId,
             quantity: Number(quantity),
             warehouse_id: whId
+        },
+        include: {
+            product: true
         }
     })
 
     res.status(StatusCodes.CREATED).json({
-        whProduct
+        warehouseProduct: whProduct
     })
 
     req.log.info({ data: { productId, quantity, warehouseId: whId } }, "action:add_warehouse_stock")
@@ -150,7 +155,7 @@ export async function update_wh_product(req: Request<{ whId: string }, any, Patc
     })
 
     res.json({
-        whProduct: updatedWhProduct
+        warehouseProduct: updatedWhProduct
     })
 
     req.log.info({ data: { quantity, productId, warehouseId: whId } }, "action:update_warehouse_stock")
@@ -209,6 +214,8 @@ export async function transfer_wh_product(req: Request<{ whId: string }, any, Tr
     req.log.info({ data: { productId, quantity, warehouseId: whId, destinationId: destinationId } }, "action:transfer_warehouse_stock")
 }
 
+
+// we can add a flag to only send products ids if the client already fetched the products.
 export async function get_wh_products(req: Request<{ whId: string }, any, any>, res: Response) {
     const { whId } = req.params
 
@@ -221,7 +228,7 @@ export async function get_wh_products(req: Request<{ whId: string }, any, any>, 
         }
     })
 
-    res.json(whProducts)
+    res.json({ warehouseProducts: whProducts })
 }
 
 

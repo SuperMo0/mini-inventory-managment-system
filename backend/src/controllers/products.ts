@@ -9,6 +9,7 @@ interface NewProduct {
 
 type UpdateProduct = Partial<NewProduct>
 
+// we should use pagination if there is too many products
 export async function get_all_products(req: Request, res: Response) {
 
     let products = await prisma.products.findMany({
