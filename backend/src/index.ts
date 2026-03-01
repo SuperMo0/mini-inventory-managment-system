@@ -5,9 +5,6 @@ import whRouter from './routes/wh.js'
 import { error_handler } from './middlewares/error_handler.js';
 import morgan from 'morgan'
 import helmet from 'helmet'
-import pino_http from 'pino-http'
-import pino from 'pino'
-import fs from 'fs';
 import cors from 'cors'
 import { prisma } from './lib/prisma.js'
 
