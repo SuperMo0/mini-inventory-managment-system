@@ -4,11 +4,11 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": "tsx --watch src/index.ts",
+    "dev": "npx tsx --watch src/index.ts",
     "build": "tsup src/index.ts --format esm --outDir dist",
     "migrate_dev": "npx prisma migrate dev",
     "generate": "npx prisma generate",
-    "test": "dotenv -e .env.test -- npx prisma db push --accept-data-loss && vitest run"
+    "test": "npx dotenv -e .env.test -- npx prisma db push --accept-data-loss && vitest run"
   },
   "keywords": [],
   "author": "",
