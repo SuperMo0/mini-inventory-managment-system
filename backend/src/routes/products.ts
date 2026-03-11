@@ -1,16 +1,16 @@
 import { Router } from "express"
 import * as controller from '../controllers/products.js'
-import { validate_param_id } from "../middlewares/warehouse_id.js"
+import { validateParamId } from "../middlewares/warehouse_id.js"
 
 
 let router = Router()
-router.param('productId', validate_param_id('productId'))
+router.param('productId', validateParamId('productId'))
 
-router.get('/', controller.get_all_products)
+router.get('/', controller.getAllProducts)
 
-router.post('/', controller.create_new_product)
+router.post('/', controller.createNewProduct)
 
-router.patch('/:productId', controller.update_product_data)
+router.patch('/:productId', controller.updateProductData)
 
 
 

@@ -10,7 +10,7 @@ interface NewProduct {
 type UpdateProduct = Partial<NewProduct>
 
 // we should use pagination if there is too many products
-export async function get_all_products(req: Request, res: Response) {
+export async function getAllProducts(req: Request, res: Response) {
 
     let products = await prisma.products.findMany({
         include: {
@@ -26,7 +26,7 @@ export async function get_all_products(req: Request, res: Response) {
      * N is the number of products
      * M is the number of warehouses that a product belong to
      * we can improve it by using a raw query instead 
-     * I did the raw faster query in get_all_wh controller 
+     * I did the raw faster query in getAllWh controller 
      */
     let updatedProducts = products.map(product => {
         let total = product.warehouseProducts.reduce((sum, item) => sum + item.quantity, 0);
@@ -42,7 +42,7 @@ export async function get_all_products(req: Request, res: Response) {
     })
 }
 
-export async function create_new_product(req: Request<{}, any, NewProduct>, res: Response) {
+export async function createNewProduct(req: Request<{}, any, NewProduct>, res: Response) {
 
     const { title, description } = req.body || {}
 
@@ -64,7 +64,7 @@ export async function create_new_product(req: Request<{}, any, NewProduct>, res:
     })
 }
 
-export async function update_product_data(req: Request<{ productId: string }, any, UpdateProduct>, res: Response) {
+export async function updateProductData(req: Request<{ productId: string }, any, UpdateProduct>, res: Response) {
     const { title, description } = req.body || {}
 
     const { productId } = req.params;

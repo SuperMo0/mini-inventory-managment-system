@@ -1,7 +1,7 @@
 import type { Request, Response } from "express";
 import { prisma } from "../lib/prisma";
 import { StatusCodes } from "http-status-codes";
-import { log_stock_change } from './../lib/logger'
+import { logStockChange } from './../lib/logger'
 
 type WareHouse = {
     id: string,
@@ -18,7 +18,7 @@ type NewWareHouse = Omit<WareHouse, 'id' | 'created_at'>;
 
 type UpdateWareHouse = Partial<NewWareHouse>
 
-export async function get_all_wh(req: Request, res: Response) {
+export async function getAllWh(req: Request, res: Response) {
 
     // faster instead of O(N*M)
     let warehouses: WareHouseExtra[] = await prisma.$queryRaw`
@@ -39,7 +39,7 @@ export async function get_all_wh(req: Request, res: Response) {
     })
 }
 
-export async function create_new_wh(req: Request<{}, any, NewWareHouse>, res: Response) {
+export async function createNewWh(req: Request<{}, any, NewWareHouse>, res: Response) {
 
     const { description, location, title } = req.body || {}
 
@@ -65,7 +65,7 @@ export async function create_new_wh(req: Request<{}, any, NewWareHouse>, res: Re
     })
 }
 
-export async function update_wh_data(req: Request<{ whId: string }, any, UpdateWareHouse>, res: Response) {
+export async function updateWhData(req: Request<{ whId: string }, any, UpdateWareHouse>, res: Response) {
     // this endpoint is still not used in the app 
     const { location, description, title } = req.body
 
@@ -102,7 +102,7 @@ type TransferWhProduct = NewWhProduct & {
 type DeleteWhProduct = Pick<NewWhProduct, 'productId'>
 
 // warehouse/products routes
-export async function add_new_wh_product(req: Request<{ whId: string }, any, NewWhProduct>, res: Response) {
+export async function addNewWhProduct(req: Request<{ whId: string }, any, NewWhProduct>, res: Response) {
 
     const { whId } = req.params
 
@@ -131,7 +131,7 @@ export async function add_new_wh_product(req: Request<{ whId: string }, any, New
     })
 
     //  better use transtion to be sure that the event is logged or the whole operation fail
-    log_stock_change('update', {
+    logStockChange('update', {
         source_warehouse_title: whProduct.warehouse.title,
         quantity: quantity,
         product_title: whProduct.product.title
@@ -139,7 +139,7 @@ export async function add_new_wh_product(req: Request<{ whId: string }, any, New
 
 }
 
-export async function update_wh_product(req: Request<{ whId: string }, any, PatchWhProduct>, res: Response) {
+export async function updateWhProduct(req: Request<{ whId: string }, any, PatchWhProduct>, res: Response) {
 
     const { whId } = req.params
     let { quantity, productId } = req.body || {}
@@ -169,7 +169,7 @@ export async function update_wh_product(req: Request<{ whId: string }, any, Patc
         warehouseProduct: updatedWhProduct
     })
 
-    log_stock_change('update', {
+    logStockChange('update', {
         source_warehouse_title: updatedWhProduct.warehouse.title,
         quantity: quantity,
         product_title: updatedWhProduct.product.title
@@ -177,7 +177,7 @@ export async function update_wh_product(req: Request<{ whId: string }, any, Patc
 
 }
 
-export async function transfer_wh_product(req: Request<{ whId: string }, any, TransferWhProduct>, res: Response) {
+export async function transferWhProduct(req: Request<{ whId: string }, any, TransferWhProduct>, res: Response) {
 
     const { destinationId, productId, quantity } = req.body
     const { whId } = req.params
@@ -234,7 +234,7 @@ export async function transfer_wh_product(req: Request<{ whId: string }, any, Tr
         destinationWhProduct
     })
 
-    log_stock_change('transfer', {
+    logStockChange('transfer', {
         source_warehouse_title: sourceWhProduct.warehouse.title,
         quantity: quantity,
         product_title: sourceWhProduct.product.title,
@@ -245,7 +245,7 @@ export async function transfer_wh_product(req: Request<{ whId: string }, any, Tr
 
 
 // we can add a flag to only send products ids if the client already fetched the products.
-export async function get_wh_products(req: Request<{ whId: string }, any, any>, res: Response) {
+export async function getWhProducts(req: Request<{ whId: string }, any, any>, res: Response) {
     const { whId } = req.params
 
     let whProducts = await prisma.warehouse_product.findMany({
@@ -262,7 +262,7 @@ export async function get_wh_products(req: Request<{ whId: string }, any, any>, 
 
 
 
-export async function delete_wh_products(req: Request<{ whId: string }, any, DeleteWhProduct>, res: Response) {
+export async function deleteWhProducts(req: Request<{ whId: string }, any, DeleteWhProduct>, res: Response) {
 
     const { productId } = req.body || {}
 
@@ -283,7 +283,7 @@ export async function delete_wh_products(req: Request<{ whId: string }, any, Del
 
     res.end()
 
-    log_stock_change('remove', {
+    logStockChange('remove', {
         source_warehouse_title: response.warehouse.title,
         quantity: response.quantity,
         product_title: response.product.title

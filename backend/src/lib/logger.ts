@@ -9,7 +9,7 @@ type StockChangeData = {
 }
 
 
-export async function log_stock_change(action: Action, data: StockChangeData) {
+export async function logStockChange(action: Action, data: StockChangeData) {
 
     await prisma.stock_changes.create({
         data: {

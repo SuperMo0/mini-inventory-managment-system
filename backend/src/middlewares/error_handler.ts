@@ -2,7 +2,7 @@ import type { Request, Response, NextFunction } from "express";
 import { Prisma } from "../../generated/prisma/client";
 import { StatusCodes } from "http-status-codes";
 
-export async function error_handler(err: Error, req: Request, res: Response, next: NextFunction) {
+export async function errorHandler(err: Error, req: Request, res: Response, next: NextFunction) {
 
 
     let stack = err.stack;

@@ -2,7 +2,7 @@ import './lib/node_env.js'
 import express from "express";
 import productsRouter from './routes/products.js'
 import whRouter from './routes/wh.js'
-import { error_handler } from './middlewares/error_handler.js';
+import { errorHandler } from './middlewares/error_handler.js';
 import morgan from 'morgan'
 import helmet from 'helmet'
 import cors from 'cors'
@@ -42,7 +42,7 @@ app.get('/api/logs', async (req, res) => {
 
 let PORT = process.env.PORT || 3000
 
-app.use(error_handler)
+app.use(errorHandler)
 
 app.listen(PORT, () => {
   console.log(`server is listening on port ${PORT}`);
